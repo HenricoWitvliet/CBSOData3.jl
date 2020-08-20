@@ -1,4 +1,4 @@
-FWFTables is licensed under the MIT License:
+CBSOdata3 is licensed under the MIT License:
 
 > MIT License
 > 
