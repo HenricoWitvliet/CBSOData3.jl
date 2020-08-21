@@ -8,16 +8,16 @@ How to use it
 
 If you know the exact dataset, you can directly use it:
 ```julia
-using DataFrames, CBSOdata3
+using DataFrames, CBSOData3
 
-df = DataFrame(CBSOdata3.OdataTable("82811NED"))
+df = DataFrame(CBSOData3.ODataTable("82811NED"))
 ```
 
 You can use the keyword argument `columns` to give a list of column names to select (case sensitive). And you can use `filter` to give a filter expression for the rows (as a String) using the [Odata3](https://www.odata.org/documentation/odata-version-3-0/) rules.
 
 For a given table you can get information about the columns in the dataset and about the used classifications by using `get_meta`:
 ```julia
-df_meta = CBSOdata3.get_meta("82811NED")
+df_meta = CBSOData3.get_meta("82811NED")
 ```
 This gives a dict with DataProperties and the classifications.
 

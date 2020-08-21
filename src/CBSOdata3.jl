@@ -10,16 +10,42 @@ BASE_URL = "http://opendata.cbs.nl"
 API = "ODataFeed/odata"
 CATALOG = "ODataCatalog"
 
+
 function get_odata(url)
     result = HTTP.get(url)
     data = JSON.parse(String(result.body))
 end
 
+
+"""
+    get_tables(base, catalog)
+
+Get all the tables in the catalog as a list of dicts. The `Identifier` can be 
+used to get the actual data. If no parameters are given, the data is retrieved
+from the (CBS)[https://www.cbs.nl] OData3 portal.
+
+The optional parameters are:
+
+  - base::String, basename of the OData3 server
+  - catalog::String, path part of the OData3 server for catalog information
+
+"""
 function get_tables(base=BASE_URL, catalog=CATALOG)
     url = base * "/" * catalog * "/Tables?\$format=json"
     return get_odata(url)["value"]
 end
 
+
+"""
+    get_meta(table; base, api)
+
+Get the metadata for a given `table`. The result is a dict with the keys `"TableInfos"`, `"DataProperties"` and all the classifications.
+
+Optional parameters are:
+
+  - base::String, basename of the OData3 server
+  - api::String, path part of the OData3 server for regular data
+"""
 function get_meta(table; base=BASE_URL, api=API)
     url = base * "/" * api * "/" * table * "?\$format=json"
     metalinks = get_odata(url)["value"]
@@ -114,7 +140,27 @@ function get_table(table; base=BASE_URL, api=API, kind="UntypedDataSet", columns
     return (data["value"], nextlink)
 end
 
-function OdataTable(table; typed=true, columns=[], filter="", base=BASE_URL, api=API, catalog=CATALOG)
+
+"""
+    ODataTable(table; typed, columns, filters, base, api, catalog)
+
+Get a `Tables` object for the dataset defined by `table`.
+Optional parameters are:
+
+  - typed::Bool, do we want a TypedDataSet (numbers as ints or floats) or an
+                 UntypedDataSet (everything string)
+  - columns::Vector{String}, exact columnnames to select, empty for all columns
+  - filters::String, OData3 specification for row filter
+  - base::String, basename of the OData3 server
+  - api::String, path part of the OData3 server for regular data
+  - catalog::String, path part of the OData3 server for catalog information
+
+# Examples
+```julia
+tbl = CBSOData3.ODataTable("82811NED", columns=["Perioden", "Onderzoekspopulatie_1", "Innovatoren_2"], filter="Perioden eq '2010X000'");
+```
+"""
+function ODataTable(table; typed=true, columns=[], filter="", base=BASE_URL, api=API, catalog=CATALOG)
     kind = typed ? "TypedDataSet" : "UntypedDataSet"
     if length(filter) == 0
         tabellen = get_tables(base, catalog)
