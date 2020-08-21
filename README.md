@@ -1,4 +1,4 @@
-CBSOdata3
+CBSOData3
 =========
 
 This is a simple [Tables](https://github.com/JuliaData/Tables.jl)-interface to use the [CBS](https://opendata.cbs.nl/statline/portal.html?_la=nl&_catalog=CBS) odata3 portal to download all CBS-datasets.

@@ -1,4 +1,4 @@
-module CBSOdata3
+module CBSOData3
 
 import HTTP
 import JSON
