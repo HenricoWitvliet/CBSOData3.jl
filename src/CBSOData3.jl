@@ -4,7 +4,7 @@ import HTTP
 import JSON
 import Tables
 
-export get_tables, get_meta, OdataTable
+export get_tables, get_meta, ODataTable
 
 BASE_URL = "http://opendata.cbs.nl"
 API = "ODataFeed/odata"
@@ -62,7 +62,7 @@ function get_meta(table; base=BASE_URL, api=API)
 end 
 
 
-struct OdataTable
+struct ODataTable
     table::String
     block::Vector{Any}
     nextlink::Union{Nothing, String}
@@ -71,7 +71,7 @@ struct OdataTable
     length::Int
 end
 
-function firstline(t::OdataTable)
+function firstline(t::ODataTable)
     datablock = getfield(t, :block)
     nextlink = getfield(t, :nextlink)
     row = 1
@@ -79,7 +79,7 @@ function firstline(t::OdataTable)
 end
 
 
-function nextline(t::OdataTable, status)
+function nextline(t::ODataTable, status)
     datablock, nextlink, row = status
     if row == length(datablock) && !isnothing(nextlink)
         datablock, nextlink = get_block(nextlink)
@@ -96,21 +96,21 @@ end
 
 struct OdataRow <: Tables.AbstractRow
     row::Dict{String, Any}
-    table::OdataTable
+    table::ODataTable
 end
 
-Tables.istable(::OdataTable) = true
-names(t::OdataTable) = getfield(t, :names)
-Tables.columnnames(t::OdataTable) = getfield(t, :names)
-types(t::OdataTable) = getfield(t, :types)
-Tables.schema(t::OdataTable) = Tables.Schema(names(t), types(t))
+Tables.istable(::ODataTable) = true
+names(t::ODataTable) = getfield(t, :names)
+Tables.columnnames(t::ODataTable) = getfield(t, :names)
+types(t::ODataTable) = getfield(t, :types)
+Tables.schema(t::ODataTable) = Tables.Schema(names(t), types(t))
 
-Tables.rowaccess(::OdataTable) = true
-Tables.rows(t::OdataTable) = t
-Base.eltype(t::OdataTable) = OdataRow
-Base.length(t::OdataTable) = getfield(t, :length)
-Base.iterate(t::OdataTable) = firstline(t)
-Base.iterate(t::OdataTable, st) = nextline(t, st)
+Tables.rowaccess(::ODataTable) = true
+Tables.rows(t::ODataTable) = t
+Base.eltype(t::ODataTable) = OdataRow
+Base.length(t::ODataTable) = getfield(t, :length)
+Base.iterate(t::ODataTable) = firstline(t)
+Base.iterate(t::ODataTable, st) = nextline(t, st)
 
 Tables.getcolumn(r::OdataRow, s::String) = something(getfield(r, :row)[s], missing)
 Tables.getcolumn(r::OdataRow, i::Int) = something(collect(values(getfield(r, :row)))[getfield(getfield(r, :table), :names)[i]], missing)
@@ -194,7 +194,7 @@ function ODataTable(table; typed=true, columns=[], filter="", base=BASE_URL, api
     if typed
         types = [Union{Missing, x} for x in types]
     end
-    return OdataTable(table, nextblock, nextlink, names, types, recordcount)
+    return ODataTable(table, nextblock, nextlink, names, types, recordcount)
 end
 
 end # module
