@@ -1,7 +1,7 @@
 CBSOData3
 =========
 
-[![Build Status](https://travis-ci.com/HenricoWitvliet/CBSOData3.jl.svg?branch=master)](https://travis-ci.com/HenricoWitvliet/CBSOData3.jl)
+![GitHub CI](https://github.com/HenricoWitvliet/CBSOData3.jl/actions/workflows/ci.yml/badge.svg)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://HenricoWitvliet.github.io/CBSOData3.jl/dev)
 
 This is a simple [Tables](https://github.com/JuliaData/Tables.jl)-interface to use the [CBS](https://opendata.cbs.nl/statline/portal.html?_la=nl&_catalog=CBS) odata3 portal to download all CBS-datasets.
